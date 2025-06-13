@@ -1,17 +1,22 @@
 use bevy::prelude::*; 
 use bevy::color::palettes::basic::BLUE;
+use crate::collider::Collider;
 
 pub struct WallPlugin;
 
 impl Plugin for WallPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(Startup,(spawn_boundaries, spawn_jupi));
+            .add_systems(Startup,(
+                spawn_boundaries, 
+                spawn_jupi,
+                spawn_container,
+            ));
     }
 }
 
 #[derive(Component)]
-struct Wall;
+pub struct Wall;
 
 fn spawn_wall (
     commands: &mut Commands,
@@ -21,6 +26,7 @@ fn spawn_wall (
     position: Vec2, 
 ) {
     commands.spawn((
+        Collider { size: Vec2::new(size.x, size.y) },
         Mesh2d(mesh.add(Rectangle::new(size.x, size.y))),
         MeshMaterial2d(material.add(Color::from(BLUE))),
         Transform::from_xyz(position.x, position.y, 1.0),
@@ -98,6 +104,10 @@ fn spawn_jupi (
     );
     spawn_wall (
         &mut commands, &mut meshes, &mut material,
+        Vec2::new(50.0, 10.0), Vec2::new(50.0, 240.0)
+    );
+    spawn_wall (
+        &mut commands, &mut meshes, &mut material,
         Vec2::new(10.0, 90.0), Vec2::new(30.0, 240.0)
     );
     spawn_wall (
@@ -119,5 +129,16 @@ fn spawn_jupi (
     spawn_wall (
         &mut commands, &mut meshes, &mut material,
         Vec2::new(90.0, 10.0), Vec2::new(170.0, 200.0)
+    );
+}
+
+fn spawn_container (
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut material: ResMut<Assets<ColorMaterial>>,
+) {
+    spawn_wall (
+        &mut commands, &mut meshes, &mut material,
+        Vec2::new(150.0, 10.0), Vec2::new(0.0, 0.0)
     );
 }
