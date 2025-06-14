@@ -26,7 +26,7 @@ fn spawn_wall (
     position: Vec2, 
 ) {
     commands.spawn((
-        Collider { size: Vec2::new(size.x, size.y) },
+        Collider { size: Vec2::new(size.x, size.y), position: Vec2::new(position.x, position.y) },
         Mesh2d(mesh.add(Rectangle::new(size.x, size.y))),
         MeshMaterial2d(material.add(Color::from(BLUE))),
         Transform::from_xyz(position.x, position.y, 1.0),

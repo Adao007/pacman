@@ -44,6 +44,9 @@ pub fn movement_input(
         else if input.pressed(KeyCode::ArrowRight) || input.pressed(KeyCode::KeyS) {
             movement.direction = Direction::Right;
         }
+        else if input.pressed(KeyCode::KeyX) {
+            movement.direction = Direction::None;
+        }
         
         movement.velocity = match movement.direction {
             Direction::Up => Vec2::new(0.0, 1.0),

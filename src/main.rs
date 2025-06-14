@@ -13,13 +13,13 @@ use movement::MovementPlugin;
 
 fn main() {
     App::new()
-        .add_event::<CollisionEvent>()
+        // .add_event::<CollisionEvent>()
         .add_plugins((
             DefaultPlugins, 
             MapPlugin,
             PlayerPlugin,
             WallPlugin,
-            ColliderPlugin,
+            //ColliderPlugin,
             MovementPlugin,
         ))
         .run();

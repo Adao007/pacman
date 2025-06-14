@@ -15,7 +15,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Startup, spawn_player)
-            .add_systems(Update, apply_movement.after(movement_input));
+            .add_systems(Update, (apply_movement, boundary_enforcer).after(movement_input));
     }
 }
 
@@ -30,28 +30,27 @@ fn spawn_player(
     commands.spawn((
         Player,
         Movement { speed: 100.0, direction: Direction::None, velocity: Vec2::new(0.0, 0.0)}, 
-        Collider { size: Vec2::new(20.0, 20.0)},
         Mesh2d(meshes.add(Circle::new(10.0))),
         MeshMaterial2d(material.add(Color::from(YELLOW))),
         Transform::from_xyz(0.0, -150.0, 1.0),
     ));
 }
 
-// fn boundary_enforcer(
-//     mut query: Query<&mut Transform, With<Player>>,
-// ) {
-//     let bottom_boundary = BOT_BOUND + PADDING;
-//     let top_boundary: f32 = TOP_BOUND - PADDING;
-//     let left_boundary: f32 = LEFT_BOUND + PADDING;
-//     let right_boundary: f32 = RIGHT_BOUND - PADDING; 
+fn boundary_enforcer(
+    mut query: Query<&mut Transform, With<Player>>,
+) {
+    let bottom_boundary = BOT_BOUND + PADDING;
+    let top_boundary: f32 = TOP_BOUND - PADDING;
+    let left_boundary: f32 = LEFT_BOUND + PADDING;
+    let right_boundary: f32 = RIGHT_BOUND - PADDING; 
 
-//     for mut transform in query.iter_mut() {
-//         // Stop at the Y Boundaries
-//         transform.translation.y = transform.translation.y.clamp(bottom_boundary, top_boundary);
-//         // Stop at the X Boundaries 
-//         transform.translation.x = transform.translation.x.clamp(left_boundary, right_boundary);
-//     }
-// }
+    for mut transform in query.iter_mut() {
+        // Stop at the Y Boundaries
+        transform.translation.y = transform.translation.y.clamp(bottom_boundary, top_boundary);
+        // Stop at the X Boundaries 
+        transform.translation.x = transform.translation.x.clamp(left_boundary, right_boundary);
+    }
+}
 
 fn apply_movement(
     time: Res<Time>,
